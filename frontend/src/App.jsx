@@ -13,7 +13,7 @@ function App() {
 
   const fetchItems = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/items');
+      const res = await axios.get('${import.meta.env.VITE_API_URL}/api/items');
       setItems(res.data);
     } catch (err) {
       console.error('Error fetching items:', err);
@@ -31,7 +31,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/items', formData);
+      await axios.post('${import.meta.env.VITE_API_URL}/api/items', formData);
       fetchItems(); // Refresh the list
       setFormData({
         name: '',
@@ -44,11 +44,13 @@ function App() {
   };
 
   const handleDelete = async (id) => {
-    // TODO (Student): Implement the delete functionality here
-    // Hint: Use axios.delete() and then call fetchItems()
-    console.log(`Delete item with ID: ${id}`);
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/items/${id}`);
+      fetchItems();
+    } catch (err) {
+      console.error('Error deleting item:', err);
+    }
   };
-
   return (
     <div className="container">
       <h1>Item Manager</h1>
